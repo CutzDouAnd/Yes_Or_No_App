@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:yes_no_app/domain/entities/message.dart';
 
 class HerMessageBubble extends StatelessWidget {
-  const HerMessageBubble({super.key});
+  final Message
+  message; // aca se declaro la variable message que se va a mostrar en el widget,
+
+  const HerMessageBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -15,15 +19,18 @@ class HerMessageBubble extends StatelessWidget {
             color: colors.secondary,
             borderRadius: BorderRadius.circular(20.0),
           ),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            child: Text('Hola Mundo 22', style: TextStyle(color: Colors.white)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 10.0,
+            ),
+            child: Text(message.text, style: TextStyle(color: Colors.white)),
           ),
         ),
 
         const SizedBox(height: 5.0),
 
-        _ImageBubble(),
+        _ImageBubble(message.imageUrl!),
 
         SizedBox(height: 10.0),
       ],
@@ -32,6 +39,10 @@ class HerMessageBubble extends StatelessWidget {
 }
 
 class _ImageBubble extends StatelessWidget {
+  final String imageUrl;
+
+  const _ImageBubble(this.imageUrl);
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -40,7 +51,7 @@ class _ImageBubble extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30.0),
       child: Image.network(
-        'https://yesno.wtf/assets/yes/14-b57c6dc03aa15a4b18f53eb50d6197ee.gif',
+        imageUrl ?? 'https://i.pinimg.com/originals/1c/8b/0e/1c8b0e7a9d9f2a3cbbd9a1e5c6f4b4.jpg',
         width: size.width * 0.7,
         height: 150,
         fit: BoxFit.cover,
@@ -50,7 +61,10 @@ class _ImageBubble extends StatelessWidget {
           return Container(
             width: size.width * 0.7,
             height: 150,
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 5.0,
+            ),
             child: const Text('Robbin esta enviando una imagen...'),
           );
         },

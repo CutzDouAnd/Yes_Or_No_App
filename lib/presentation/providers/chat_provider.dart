@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:yes_no_app/config/helpers/get_yes_no_answer.dart';
 import 'package:yes_no_app/domain/entities/message.dart';
 
 class ChatProvider extends ChangeNotifier {
 
   final ScrollController chatScrollController = ScrollController();  
+  final GetYesNoAnswer getYesNoAnswer = GetYesNoAnswer();
 
   List<Message> messageList = [
     Message(text: 'Hola Robbin', fromWho: FromWho.me),
@@ -16,8 +18,23 @@ class ChatProvider extends ChangeNotifier {
 
     final newMessage = Message(text: text, fromWho: FromWho.me);
     messageList.add(newMessage);
+
+    if(text .endsWith('?')) {
+      herReply();
+    }
+
     notifyListeners(); //Notifica que hubo un cambio en la lista de mensajes, para que los 
     //widgets que estan escuchando este provider se reconstruyan y muestren el nuevo mensaje en la pantalla.
+
+    moveScrollToBottom(); // cada vez que se agrega un nuevo mensaje, se llama a esta funcion para mover el scroll hacia abajo y mostrar el ultimo mensaje agregado.
+  }
+
+  Future <void> herReply() async {
+
+    final herMessage = await getYesNoAnswer.getAnswer(); // se obtiene la respuesta de la API, que es un mensaje de tipo Message, y se guarda en la variable herMessage.
+
+    messageList.add(herMessage); // se agrega el mensaje de la respuesta a la lista de mensajes.
+    notifyListeners(); // se notifica que hubo un cambio en la lista de mensajes, para que los widgets que estan escuchando este provider se reconstruyan y muestren el nuevo mensaje en la pantalla.
 
     moveScrollToBottom(); // cada vez que se agrega un nuevo mensaje, se llama a esta funcion para mover el scroll hacia abajo y mostrar el ultimo mensaje agregado.
   }
